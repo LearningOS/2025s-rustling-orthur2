@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -50,13 +49,36 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        match self.root {
+            None => self.root = Some(Box::new(TreeNode::new(value))),
+            Some(ref mut node) => node.insert(value),
+        }
     }
 
-    // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        //TODO
-        true
+        match &self.root {
+            None => false,
+            Some(node) => {
+                let mut current = node;
+                loop {
+                    match value.cmp(&current.value) {
+                        Ordering::Equal => return true,
+                        Ordering::Less => {
+                            match &current.left {
+                                None => return false,
+                                Some(left) => current = left,
+                            }
+                        }
+                        Ordering::Greater => {
+                            match &current.right {
+                                None => return false,
+                                Some(right) => current = right,
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -66,7 +88,21 @@ where
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
-        //TODO
+        match value.cmp(&self.value) {
+            Ordering::Equal => return,
+            Ordering::Less => {
+                match self.left {
+                    None => self.left = Some(Box::new(TreeNode::new(value))),
+                    Some(ref mut left) => left.insert(value),
+                }
+            }
+            Ordering::Greater => {
+                match self.right {
+                    None => self.right = Some(Box::new(TreeNode::new(value))),
+                    Some(ref mut right) => right.insert(value),
+                }
+            }
+        }
     }
 }
 
@@ -121,6 +157,6 @@ mod tests {
             None => panic!("Root should not be None after insertion"),
         }
     }
-}    
+}
 
 

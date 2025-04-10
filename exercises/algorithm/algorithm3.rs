@@ -3,10 +3,34 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
+fn sort<T: Ord>(array: &mut [T]) {
+    if array.len() <= 1 {
+        return;
+    }
+    quick_sort(array, 0, (array.len() - 1) as isize);
+}
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn quick_sort<T: Ord>(array: &mut [T], low: isize, high: isize) {
+    if low < high {
+        let pivot = partition(array, low, high);
+        quick_sort(array, low, pivot - 1);
+        quick_sort(array, pivot + 1, high);
+    }
+}
+
+fn partition<T: Ord>(array: &mut [T], low: isize, high: isize) -> isize {
+    let pivot = high as usize;
+    let mut i = low - 1;
+    
+    for j in low..high {
+        if array[j as usize] <= array[pivot] {
+            i += 1;
+            array.swap(i as usize, j as usize);
+        }
+    }
+    
+    array.swap((i + 1) as usize, pivot);
+    i + 1
 }
 #[cfg(test)]
 mod tests {
